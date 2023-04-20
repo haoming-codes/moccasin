@@ -1,6 +1,7 @@
 # Mocassin
 
-This repo implements Mocassin
+This repo implements Mocassin, a constraint programming (CP) method for rematerialization. 
+It makes use of OR-Tools' [CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver).
 
 ## Installation
 
