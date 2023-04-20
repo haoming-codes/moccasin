@@ -38,16 +38,16 @@ def addAllHints(model, solver, vars):
         model.AddHint(var, solver.Value(var))
 
 def remat(G, B, C, 
-        timeout=7200, 
+        timeout=3600, 
         discretized=True, 
         reservoir=True, 
         use_end_global=False, 
-        use_stage=False, 
+        use_stage=True, 
         topo_order=None,
-        phase1=False,
-        use_interval_length_domain=False,
-        use_gcd=False,
-        reservoir_option=1,
+        phase1=True,
+        use_interval_length_domain=True,
+        use_gcd=True,
+        reservoir_option=2,
         log_dir="output"):
     topo_order = list(nx.topological_sort(G)) if topo_order is None else topo_order
     params = copy.copy(locals())
