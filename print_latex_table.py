@@ -3,6 +3,7 @@ import pickle
 import pandas as pd
 from os import listdir
 from os.path import isfile, join
+import argparse
 import matplotlib
 matplotlib.rcParams['font.family'] = 'serif'
 
@@ -15,16 +16,20 @@ name_map = {
     "random_layered_n1000_w0.31_nlv0.75_ed0.2_scd0.14": "RL1000",
 }
 settings = [
-    "icml_original/",
+    "icml",
 ]
 graphs = set([])
 
-path = "./output/"
+parser = argparse.ArgumentParser()
+parser.add_argument('-o', '--output_dir', type=str, required=False, default="output/icml")
+args = parser.parse_args()
+
+path = args.output_dir
 dics = {setting: [] for setting in settings}
 progressions = {setting: {} for setting in settings}
 for setting in settings:
     # print(path+setting+"/"+f)
-    onlyfiles = sorted([join(path, setting, f) for f in listdir(join(path, setting)) if isfile(join(path, setting, f))])
+    onlyfiles = sorted([join(path, f) for f in listdir(path) if isfile(join(path, f))])
     print(onlyfiles)
     for file_name in onlyfiles:
         with open(file_name, "rb") as f:
