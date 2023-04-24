@@ -1,19 +1,19 @@
-# Mocassin
+# Moccasin
 
-This repo implements Mocassin, a constraint programming (CP) method for rematerialization. 
+This repo implements Moccasin, a constraint programming (CP) method for rematerialization. 
 It makes use of OR-Tools' [CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver).
 
 ## Installation
 
 Download the repo
 ```
-git clone https://github.com/haoming-codes/mocassin.git
-cd mocassin
+git clone https://github.com/haoming-codes/moccasin.git
+cd moccasin
 ```
 Create the environment (e.g. using conda)
 ```
-conda create -n mocassin_env python=3.9
-conda activate mocassin_env
+conda create -n moccasin_env python=3.9
+conda activate moccasin_env
 pip3 install .
 ```
 
