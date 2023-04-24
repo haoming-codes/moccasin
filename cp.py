@@ -51,9 +51,6 @@ def remat(G, B, C,
         log_dir="output"):
     topo_order = list(nx.topological_sort(G)) if topo_order is None else topo_order
     params = copy.copy(locals())
-    fname = f"{log_dir}/{CP_name}.pkl"
-    os.makedirs(os.path.dirname(fname), exist_ok=True)
-    pkl_dict = {}
     sys.stdout.flush()
 
     if C == "max": C = G.number_of_nodes()
@@ -205,6 +202,9 @@ def remat(G, B, C,
 
     # === Solve ===
     solution_printer = ObjectiveSolutionSaver(log_file) # only logs phase 2 objective
+    fname = f"{log_dir}/{CP_name}.pkl"
+    os.makedirs(os.path.dirname(fname), exist_ok=True)
+    pkl_dict = {}
     if phase1:
         model.Minimize(tau)
         status = solver.Solve(model)
@@ -272,8 +272,6 @@ def remat(G, B, C,
     else:
         pkl_dict["status"] = solver.StatusName(status)
         maybe_dump(pkl_dict, fname)
-        os.remove(log_file)
-        return pkl_dict
 
     print('===========================================\n')
     sys.stdout.flush()
