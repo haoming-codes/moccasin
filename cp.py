@@ -51,6 +51,9 @@ def remat(G, B, C,
         log_dir="output"):
     topo_order = list(nx.topological_sort(G)) if topo_order is None else topo_order
     params = copy.copy(locals())
+    fname = f"{log_dir}/{CP_name}.pkl"
+    os.makedirs(os.path.dirname(fname), exist_ok=True)
+    pkl_dict = {}
     sys.stdout.flush()
 
     if C == "max": C = G.number_of_nodes()
@@ -213,7 +216,10 @@ def remat(G, B, C,
             print(f"mem_footprint = {solver.Value(mem_footprint)*mems_gcd}")
             print(f"solver.WallTime = {solver.WallTime()}")
         else:
-            assert False
+            pkl_dict["status"] = solver.StatusName(status)
+            maybe_dump(pkl_dict, fname)
+            os.remove(log_file)
+            return pkl_dict
         addAllHints(model, solver, vars=flatten([starts, ends, lengths, interval_presences, end_global]))
         model.Proto().ClearField('objective')
 
@@ -248,7 +254,6 @@ def remat(G, B, C,
             solns[d['Solution']] = d
 
         # === make result dict ===
-        pkl_dict = {}
         del params['G']
         params['G_name'] = G.graph['name']
         pkl_dict["params"] = params
@@ -263,11 +268,12 @@ def remat(G, B, C,
         pkl_dict["topo_mem"] = topo_mem*mems_gcd
         pkl_dict["topo_cpu"] = topo_cpu*cpus_gcd
 
-        fname = f"{log_dir}/{CP_name}.pkl"
-        os.makedirs(os.path.dirname(fname), exist_ok=True)
         maybe_dump(pkl_dict, fname)
     else:
-        return
+        pkl_dict["status"] = solver.StatusName(status)
+        maybe_dump(pkl_dict, fname)
+        os.remove(log_file)
+        return pkl_dict
 
     print('===========================================\n')
     sys.stdout.flush()
