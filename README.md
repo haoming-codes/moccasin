@@ -1,7 +1,8 @@
 # Moccasin
 
-This repo implements Moccasin, a constraint programming (CP) method for rematerialization. 
-It makes use of OR-Tools' [CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver).
+This repo implements Moccasin, a constraint programming (CP) method for rematerialization.
+It takes as input a [`nx.DiGraph`](https://networkx.org/documentation/stable/reference/classes/digraph.html)
+and solves a CP using OR-Tools' [CP-SAT Solver](https://developers.google.com/optimization/cp/cp_solver).
 
 ## Installation
 
