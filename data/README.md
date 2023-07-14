@@ -1,6 +1,6 @@
 # Computation Graphs
 
-Graphs in this directory are example computation graphs that emulates NN training and inference. 
+Graphs in this directory are example computation graphs that emulate NN training and inference. 
 
 ## Checkmate graphs
 They are `nx.DiGraph` created from 
