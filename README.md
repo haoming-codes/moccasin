@@ -39,3 +39,21 @@ Parse the results
 ```
 python3 print_latex_table.py -o "output/icml"
 ```
+
+## Citing the paper
+```
+@InProceedings{pmlr-v202-bartan23a,
+  title = 	 {Moccasin: Efficient Tensor Rematerialization for Neural Networks},
+  author =       {Bartan, Burak and Li, Haoming and Teague, Harris and Lott, Christopher and Dilkina, Bistra},
+  booktitle = 	 {Proceedings of the 40th International Conference on Machine Learning},
+  pages = 	 {1826--1837},
+  year = 	 {2023},
+  editor = 	 {Krause, Andreas and Brunskill, Emma and Cho, Kyunghyun and Engelhardt, Barbara and Sabato, Sivan and Scarlett, Jonathan},
+  volume = 	 {202},
+  series = 	 {Proceedings of Machine Learning Research},
+  month = 	 {23--29 Jul},
+  publisher =    {PMLR},
+  pdf = 	 {https://proceedings.mlr.press/v202/bartan23a/bartan23a.pdf},
+  url = 	 {https://proceedings.mlr.press/v202/bartan23a.html}
+}
+```
