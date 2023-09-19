@@ -15,7 +15,7 @@ Create the environment (e.g. using conda)
 ```
 conda create -n moccasin_env python=3.9
 conda activate moccasin_env
-pip3 install .
+pip3 install -e .
 ```
 
 ## Reproducing the paper

@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: mocassin
+Version: 0.0.1
+Summary: Moccasin, a constraint programming (CP) method for rematerialization
+Requires-Python: >=3.9
+License-File: LICENSE

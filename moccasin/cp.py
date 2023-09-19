@@ -1,7 +1,7 @@
 from ortools.sat.python import cp_model
 import networkx as nx
 import sys
-from util import maybe_dump, get_mem_from_schedule, gcd_process, flatten
+from .util import maybe_dump, get_mem_from_schedule, gcd_process, flatten
 import math
 import numpy as np
 import time
