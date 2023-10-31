@@ -66,6 +66,10 @@ def remat(G, B=None, L=None, R=None, C=2,
     assert objective in ("min_footprint", "min_runtime", "min_communication")
     phase1 = False if B is None else phase1
     topo_order = list(nx.topological_sort(G)) if topo_order is None else topo_order
+    label_mapping = {old: topo_order.index(old) for old in G.nodes}
+    G = nx.relabel_nodes(G, label_mapping)
+    topo_order = list(nx.topological_sort(G))
+    print(G.nodes, topo_order)
     params = copy.copy(locals())
     sys.stdout.flush()
 
