@@ -64,12 +64,12 @@ def remat(G, B=None, L=None, R=None, C=2,
         objective="min_runtime",
         log_dir="output"):
     assert objective in ("min_footprint", "min_runtime", "min_communication")
-    phase1 = False if B is None else phase1
-    topo_order = list(nx.topological_sort(G)) if topo_order is None else topo_order
-    label_mapping = {old: topo_order.index(old) for old in G.nodes}
-    G = nx.relabel_nodes(G, label_mapping)
-    topo_order = list(nx.topological_sort(G))
-    print(G.nodes, topo_order)
+    phase1 = phase1 if B else False
+    topo_order = topo_order if topo_order else list(nx.topological_sort(G))
+    if max(G.nodes) >= G.number_of_nodes():
+        label_mapping = {old: topo_order.index(old) for old in G.nodes}
+        G = nx.relabel_nodes(G, label_mapping)
+        topo_order = [label_mapping[v] for v in topo_order]
     params = copy.copy(locals())
     sys.stdout.flush()
 
@@ -78,12 +78,12 @@ def remat(G, B=None, L=None, R=None, C=2,
         G, mems_gcd, cpus_gcd = gcd_process(G)
     else:
         mems_gcd, cpus_gcd = 1, 1
-    if B is not None: B = math.ceil(B/mems_gcd)
-    if L is not None: L = math.ceil(L/mems_gcd)
-    if R is not None: R = math.ceil(R/cpus_gcd)
+    if B: B = math.ceil(B/mems_gcd)
+    if L: L = math.ceil(L/mems_gcd)
+    if R: R = math.ceil(R/cpus_gcd)
     log_file = str(uuid.uuid4())
 
-    nodes = G.nodes
+    nodes = sorted(G.nodes)
     edges = G.edges
     N = G.number_of_nodes()
     node_duration = nx.get_node_attributes(G, "cost_cpu")
@@ -244,10 +244,10 @@ def remat(G, B=None, L=None, R=None, C=2,
     os.makedirs(os.path.dirname(fname), exist_ok=True)
     pkl_dict = {}
     if phase1:
-        if objective != "min_runtime" and R is not None:
+        if objective != "min_runtime" and R:
             model.Add(tau_cpu >= schedule_duration)
             model.Add(tau_cpu >= R)
-        if objective != "min_footprint" and B is not None:
+        if objective != "min_footprint" and B:
             model.Add(tau_mem >= mem_footprint)
             model.Add(tau_mem >= B)
         model.Minimize(tau_cpu+tau_mem)
@@ -269,11 +269,11 @@ def remat(G, B=None, L=None, R=None, C=2,
         model.Proto().ClearField('objective')
 
     # add budget constraints
-    if objective != "min_footprint" and B is not None:
+    if objective != "min_footprint" and B:
         model.Add(mem_footprint <= B)
-    if objective != "min_communication" and L is not None:
+    if objective != "min_communication" and L:
         model.Add(comm_load <= L)
-    if objective != "min_runtime" and R is not None:
+    if objective != "min_runtime" and R:
         model.Add(schedule_duration <= R)
     
     # Phase 2 objectives
