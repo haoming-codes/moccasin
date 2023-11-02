@@ -6,72 +6,6 @@ import json
 import math
 import copy
 
-    
-def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
-
-    '''
-    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.  
-    Licensed under Creative Commons Attribution-Share Alike 
-    
-    If the graph is a tree this will return the positions to plot this in a 
-    hierarchical layout.
-    
-    G: the graph (must be a tree)
-    
-    root: the root node of current branch 
-    - if the tree is directed and this is not given, 
-      the root will be found and used
-    - if the tree is directed and this is given, then 
-      the positions will be just for the descendants of this node.
-    - if the tree is undirected and not given, 
-      then a random choice will be used.
-    
-    width: horizontal space allocated for this branch - avoids overlap with other branches
-    
-    vert_gap: gap between levels of hierarchy
-    
-    vert_loc: vertical location of root
-    
-    xcenter: horizontal location of root
-    '''
-    if not nx.is_tree(G):
-        raise TypeError('cannot use hierarchy_pos on a graph that is not a tree')
-
-    if root is None:
-        if isinstance(G, nx.DiGraph):
-            root = next(iter(nx.topological_sort(G)))  #allows back compatibility with nx version 1.11
-        else:
-            root = random.choice(list(G.nodes))
-
-    def _hierarchy_pos(G, root, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5, pos = None, parent = None):
-        '''
-        see hierarchy_pos docstring for most arguments
-
-        pos: a dict saying where all nodes go if they have been assigned
-        parent: parent of this branch. - only affects it if non-directed
-
-        '''
-    
-        if pos is None:
-            pos = {root:(xcenter,vert_loc)}
-        else:
-            pos[root] = (xcenter, vert_loc)
-        children = list(G.neighbors(root))
-        if not isinstance(G, nx.DiGraph) and parent is not None:
-            children.remove(parent)  
-        if len(children)!=0:
-            dx = width/len(children) 
-            nextx = xcenter - width/2 - dx/2
-            for child in children:
-                nextx += dx
-                pos = _hierarchy_pos(G,child, width = dx, vert_gap = vert_gap, 
-                                    vert_loc = vert_loc-vert_gap, xcenter=nextx,
-                                    pos=pos, parent = root)
-        return pos
-
-            
-    return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
-
 def gen_unet_graph(forward_node_count):
     """
     gen_linear_graph will generate linear-style graphs like VGG and AlexNet.
@@ -126,10 +60,10 @@ def maybe_dump(pkl, fname):
         pickle.dump(result, handle)
 
 def max_degree_ram(G):
-        """compute minimum memory needed for any single node (ie inputs and outputs)"""
-        # vfwd = [v for v in self.v if v not in self.backward_nodes]
-        vfwd = G.nodes
-        return max([sum([G.nodes[u]["cost_ram"] for u in G.predecessors(v)]) + G.nodes[v]["cost_ram"] for v in vfwd])
+    """compute minimum memory needed for any single node (ie inputs and outputs)"""
+    # vfwd = [v for v in self.v if v not in self.backward_nodes]
+    vfwd = G.nodes
+    return max([sum([G.nodes[u]["cost_ram"] for u in G.predecessors(v)]) + G.nodes[v]["cost_ram"] for v in vfwd])
 
 def save_graph(G):
     j = json.dumps(nx.node_link_data(G))
@@ -171,7 +105,6 @@ def gcd_process(G):
     cpus = dict(nx.get_node_attributes(G, "cost_cpu")).values()
     mems_gcd = math.gcd(*mems)
     cpus_gcd = math.gcd(*cpus)
-    print(f"mems_gcd = {mems_gcd}, cpus_gcd = {cpus_gcd}")
     for v in G.nodes:
         G.nodes[v]["cost_ram"] //= mems_gcd
         G.nodes[v]["cost_cpu"] //= cpus_gcd
